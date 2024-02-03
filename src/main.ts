@@ -1,4 +1,5 @@
-// Create a class for the element
+export default (() => {
+  // Create a class for the element
 class MyWeather extends HTMLElement {
   static observedAttributes = ["lat", "lng"]
   weatherApiUrl: string
@@ -104,3 +105,4 @@ class MyWeather extends HTMLElement {
 }
 
 customElements.define("my-weather", MyWeather);
+})()
