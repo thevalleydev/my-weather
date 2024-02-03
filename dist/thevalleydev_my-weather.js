@@ -14,7 +14,7 @@ const f = (() => {
       i(this, "contentDiv");
       i(this, "getForecast");
       i(this, "getForecastUrl");
-      this.doRender = !0, this.weatherApiUrl = `https://api.weather.gov/points/${this.getAttribute("lat")},${this.getAttribute("lng")}`, this.contentDiv = document.createElement("div"), this.contentDiv.classList.add("periodContainer"), this.contentDiv.setAttribute("style", "display:flex;"), this.contentDiv.innerText = "loading", this.forecastData = [], this.forecastMarkup = "", this.getForecast = async (t) => {
+      this.doRender = !0, this.weatherApiUrl = "", this.contentDiv = document.createElement("div"), this.contentDiv.classList.add("periodContainer"), this.contentDiv.setAttribute("style", "display:flex;"), this.contentDiv.innerText = "loading", this.forecastData = [], this.forecastMarkup = "", this.getForecast = async (t) => {
         const r = await (await fetch(t)).json();
         return r == null ? void 0 : r.properties;
       }, this.getForecastUrl = async () => {
@@ -24,31 +24,32 @@ const f = (() => {
       };
     }
     connectedCallback() {
+      console.log(this);
       const t = this.attachShadow({ mode: "open" });
       t.innerHTML = `<style>
-        :host {
-          font: 1.2rem sans-serif;
-          max-width: 400px;
-          display: block;
-        }
-        h1 {
-          font-weight: 500;
-        }
-        .periodContainer {
-          justify-content: space-between;
-        }
-        .periodCard {
-          display: flex;
-          flex-direction: column;
-        }
-        .temperature {
-            text-align: center;
-            font-size: 1.8rem;
-            padding: .5rem;
-        }
-        </style>
-        <h1><slot name="title">My Weather</slot></h1>
-      `, t.appendChild(this.contentDiv), this.getForecastUrl().then((s) => {
+      :host {
+        font: 1.2rem sans-serif;
+        max-width: 400px;
+        display: block;
+       }
+       h1 {
+         font-weight: 500;
+       }
+       .periodContainer {
+         justify-content: space-between;
+       }
+       .periodCard {
+         display: flex;
+         flex-direction: column;
+       }
+       .temperature {
+          text-align: center;
+          font-size: 1.8rem;
+          padding: .5rem;
+       }
+      </style>
+      <h1><slot name="title">My Weather</slot></h1>
+    `, t.appendChild(this.contentDiv), this.weatherApiUrl = `https://api.weather.gov/points/${this.getAttribute("lat")},${this.getAttribute("lng")}`, this.getForecastUrl().then((s) => {
         this.mapData(s).buildUi().render();
       });
     }
@@ -58,8 +59,8 @@ const f = (() => {
     mapData(t) {
       const { periods: s } = t;
       return this.forecastData = s.slice(0, 3).map((r) => {
-        const { name: o, temperature: c, temperatureUnit: d, windSpeed: h, shortForecast: p } = r;
-        return { name: o, temperature: c, temperatureUnit: d, windSpeed: h, shortForecast: p };
+        const { name: o, temperature: c, temperatureUnit: h, windSpeed: d, shortForecast: p } = r;
+        return { name: o, temperature: c, temperatureUnit: h, windSpeed: d, shortForecast: p };
       }), this;
     }
     buildUi() {
