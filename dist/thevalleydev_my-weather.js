@@ -1,6 +1,6 @@
 var p = Object.defineProperty;
-var u = (s, r, i) => r in s ? p(s, r, { enumerable: !0, configurable: !0, writable: !0, value: i }) : s[r] = i;
-var e = (s, r, i) => (u(s, typeof r != "symbol" ? r + "" : r, i), i);
+var u = (s, r, a) => r in s ? p(s, r, { enumerable: !0, configurable: !0, writable: !0, value: a }) : s[r] = a;
+var e = (s, r, a) => (u(s, typeof r != "symbol" ? r + "" : r, a), a);
 const f = (() => {
   class s extends HTMLElement {
     constructor() {
@@ -13,13 +13,12 @@ const f = (() => {
       e(this, "getForecast");
       e(this, "getForecastUrl");
       this.weatherApiUrl = `https://api.weather.gov/points/${this.lat},${this.lng}`, this.doRender = !0, this.contentDiv = document.createElement("div"), this.contentDiv.classList.add("periodContainer"), this.contentDiv.setAttribute("style", "display:flex;"), this.contentDiv.innerText = "content goes here", this.forecastData = [], this.forecastMarkup = "", this.getForecast = async (t) => {
-        console.log("url", t);
-        const a = await (await fetch(t)).json();
-        return a == null ? void 0 : a.properties;
+        const i = await (await fetch(t)).json();
+        return i == null ? void 0 : i.properties;
       }, this.getForecastUrl = async () => {
-        var a;
+        var i;
         const n = await (await fetch(this.weatherApiUrl)).json();
-        return this.getForecast((a = n == null ? void 0 : n.properties) == null ? void 0 : a.forecast);
+        return this.getForecast((i = n == null ? void 0 : n.properties) == null ? void 0 : i.forecast);
       };
     }
     get lat() {
@@ -27,6 +26,12 @@ const f = (() => {
     }
     get lng() {
       return this.getAttribute("lng");
+    }
+    set lat(t) {
+      this.lat = t;
+    }
+    set lng(t) {
+      this.lng = t;
     }
     connectedCallback() {
       const t = this.attachShadow({ mode: "open" });
@@ -61,12 +66,12 @@ const f = (() => {
       }));
     }
     render() {
-      console.log(this.forecastMarkup), this.contentDiv.innerHTML = this.forecastMarkup;
+      this.contentDiv.innerHTML = this.forecastMarkup;
     }
     mapData(t) {
       const { periods: n } = t;
-      return this.forecastData = n.slice(0, 3).map((a) => {
-        const { name: o, temperature: c, temperatureUnit: h, windSpeed: l, shortForecast: d } = a;
+      return this.forecastData = n.slice(0, 3).map((i) => {
+        const { name: o, temperature: c, temperatureUnit: h, windSpeed: l, shortForecast: d } = i;
         return { name: o, temperature: c, temperatureUnit: h, windSpeed: l, shortForecast: d };
       }), this;
     }
