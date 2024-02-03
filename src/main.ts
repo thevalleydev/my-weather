@@ -13,12 +13,12 @@ class MyWeather extends HTMLElement {
   constructor() {
     // Always call super first in constructor
     super()
-    this.weatherApiUrl =  `https://api.weather.gov/points/${this.lat},${this.lng}`
     this.doRender = true
+    this.weatherApiUrl = `https://api.weather.gov/points/${this.getAttribute('lat')},${this.getAttribute('lng')}`
     this.contentDiv = <HTMLElement>document.createElement('div')
     this.contentDiv.classList.add('periodContainer')
     this.contentDiv.setAttribute('style', 'display:flex;')
-    this.contentDiv.innerText = 'content goes here'
+    this.contentDiv.innerText = 'loading'
     this.forecastData = []
     this.forecastMarkup = ''
     
@@ -34,23 +34,7 @@ class MyWeather extends HTMLElement {
     }
   }
   
-  get lat () {
-    return this.getAttribute('lat')
-  }
-  
-  get lng () {
-    return this.getAttribute('lng')
-  }
-
-  set lat (lat) {
-    this.lat = lat
-  }
-
-  set lng (lng) {
-    this.lng = lng
-  }
-
-  connectedCallback() {    
+  connectedCallback() {
     const shadow = this.attachShadow({ mode: "open" })
     shadow.innerHTML = `<style>
       :host {
@@ -77,18 +61,14 @@ class MyWeather extends HTMLElement {
       <h1><slot name="title">My Weather</slot></h1>
     `
     shadow.appendChild(this.contentDiv)
-  }
-
-  attributeChangedCallback() {
-    if (this.lat && this.lng && this.doRender) {
-      this.doRender = false
-      this.getForecastUrl().then((forecast: { periods: any; }) => {
-        this.mapData(forecast).buildUi().render()
-      })
-    }
+    
+    this.getForecastUrl().then((forecast: { periods: any; }) => {
+      this.mapData(forecast).buildUi().render()
+    })
   }
   
   render() {
+    this.doRender = false
     this.contentDiv.innerHTML = this.forecastMarkup
   }
   
@@ -109,6 +89,7 @@ class MyWeather extends HTMLElement {
     return this
   }
 }
-
-customElements.define("my-weather", MyWeather);
+if (document) {
+  customElements.define("my-weather", MyWeather);
+}
 })()
