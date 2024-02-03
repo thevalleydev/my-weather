@@ -2,6 +2,8 @@ var l = Object.defineProperty;
 var u = (a, e, n) => e in a ? l(a, e, { enumerable: !0, configurable: !0, writable: !0, value: n }) : a[e] = n;
 var i = (a, e, n) => (u(a, typeof e != "symbol" ? e + "" : e, n), n);
 const f = (() => {
+  if (!document)
+    return;
   class a extends HTMLElement {
     constructor() {
       super();
@@ -24,29 +26,29 @@ const f = (() => {
     connectedCallback() {
       const t = this.attachShadow({ mode: "open" });
       t.innerHTML = `<style>
-      :host {
-        font: 1.2rem sans-serif;
-        max-width: 400px;
-        display: block;
-       }
-       h1 {
-         font-weight: 500;
-       }
-       .periodContainer {
-         justify-content: space-between;
-       }
-       .periodCard {
-         display: flex;
-         flex-direction: column;
-       }
-       .temperature {
-          text-align: center;
-          font-size: 1.8rem;
-          padding: .5rem;
-       }
-      </style>
-      <h1><slot name="title">My Weather</slot></h1>
-    `, t.appendChild(this.contentDiv), this.getForecastUrl().then((s) => {
+        :host {
+          font: 1.2rem sans-serif;
+          max-width: 400px;
+          display: block;
+        }
+        h1 {
+          font-weight: 500;
+        }
+        .periodContainer {
+          justify-content: space-between;
+        }
+        .periodCard {
+          display: flex;
+          flex-direction: column;
+        }
+        .temperature {
+            text-align: center;
+            font-size: 1.8rem;
+            padding: .5rem;
+        }
+        </style>
+        <h1><slot name="title">My Weather</slot></h1>
+      `, t.appendChild(this.contentDiv), this.getForecastUrl().then((s) => {
         this.mapData(s).buildUi().render();
       });
     }
@@ -64,9 +66,7 @@ const f = (() => {
       return this.forecastMarkup = this.forecastData.map((t) => `<div class="periodCard"><div>${t.name}</div><div class="temperature">${t.temperature}</div></div>`).join(""), this;
     }
   }
-  document && (window.onload = () => {
-    customElements.define("my-weather", a);
-  });
+  customElements.define("my-weather", a);
 })();
 export {
   f as default
