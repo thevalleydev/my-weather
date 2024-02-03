@@ -24,7 +24,6 @@ const f = (() => {
       };
     }
     connectedCallback() {
-      console.log(this);
       const t = this.attachShadow({ mode: "open" });
       t.innerHTML = `<style>
       :host {
