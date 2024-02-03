@@ -23,7 +23,6 @@ class MyWeather extends HTMLElement {
     this.forecastMarkup = ''
     
     this.getForecast = async (url: RequestInfo | URL) => {
-      console.log('url', url)
         const response = await fetch(url)
         const weather = await response.json()
         return weather?.properties
@@ -41,6 +40,14 @@ class MyWeather extends HTMLElement {
   
   get lng () {
     return this.getAttribute('lng')
+  }
+
+  set lat (lat) {
+    this.lat = lat
+  }
+
+  set lng (lng) {
+    this.lng = lng
   }
 
   connectedCallback() {    
@@ -82,7 +89,6 @@ class MyWeather extends HTMLElement {
   }
   
   render() {
-    console.log(this.forecastMarkup)
     this.contentDiv.innerHTML = this.forecastMarkup
   }
   
