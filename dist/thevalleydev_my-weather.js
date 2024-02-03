@@ -1,37 +1,25 @@
-var p = Object.defineProperty;
-var u = (s, r, a) => r in s ? p(s, r, { enumerable: !0, configurable: !0, writable: !0, value: a }) : s[r] = a;
-var e = (s, r, a) => (u(s, typeof r != "symbol" ? r + "" : r, a), a);
+var l = Object.defineProperty;
+var u = (a, e, n) => e in a ? l(a, e, { enumerable: !0, configurable: !0, writable: !0, value: n }) : a[e] = n;
+var i = (a, e, n) => (u(a, typeof e != "symbol" ? e + "" : e, n), n);
 const f = (() => {
-  class s extends HTMLElement {
+  class a extends HTMLElement {
     constructor() {
       super();
-      e(this, "weatherApiUrl");
-      e(this, "doRender");
-      e(this, "forecastData");
-      e(this, "forecastMarkup");
-      e(this, "contentDiv");
-      e(this, "getForecast");
-      e(this, "getForecastUrl");
-      this.weatherApiUrl = `https://api.weather.gov/points/${this.lat},${this.lng}`, this.doRender = !0, this.contentDiv = document.createElement("div"), this.contentDiv.classList.add("periodContainer"), this.contentDiv.setAttribute("style", "display:flex;"), this.contentDiv.innerText = "content goes here", this.forecastData = [], this.forecastMarkup = "", this.getForecast = async (t) => {
-        const i = await (await fetch(t)).json();
-        return i == null ? void 0 : i.properties;
+      i(this, "weatherApiUrl");
+      i(this, "doRender");
+      i(this, "forecastData");
+      i(this, "forecastMarkup");
+      i(this, "contentDiv");
+      i(this, "getForecast");
+      i(this, "getForecastUrl");
+      this.doRender = !0, this.weatherApiUrl = `https://api.weather.gov/points/${this.getAttribute("lat")},${this.getAttribute("lng")}`, this.contentDiv = document.createElement("div"), this.contentDiv.classList.add("periodContainer"), this.contentDiv.setAttribute("style", "display:flex;"), this.contentDiv.innerText = "loading", this.forecastData = [], this.forecastMarkup = "", this.getForecast = async (t) => {
+        const r = await (await fetch(t)).json();
+        return r == null ? void 0 : r.properties;
       }, this.getForecastUrl = async () => {
-        var i;
-        const n = await (await fetch(this.weatherApiUrl)).json();
-        return this.getForecast((i = n == null ? void 0 : n.properties) == null ? void 0 : i.forecast);
+        var r;
+        const s = await (await fetch(this.weatherApiUrl)).json();
+        return this.getForecast((r = s == null ? void 0 : s.properties) == null ? void 0 : r.forecast);
       };
-    }
-    get lat() {
-      return this.getAttribute("lat");
-    }
-    get lng() {
-      return this.getAttribute("lng");
-    }
-    set lat(t) {
-      this.lat = t;
-    }
-    set lng(t) {
-      this.lng = t;
     }
     connectedCallback() {
       const t = this.attachShadow({ mode: "open" });
@@ -58,28 +46,25 @@ const f = (() => {
        }
       </style>
       <h1><slot name="title">My Weather</slot></h1>
-    `, t.appendChild(this.contentDiv);
-    }
-    attributeChangedCallback() {
-      this.lat && this.lng && this.doRender && (this.doRender = !1, this.getForecastUrl().then((t) => {
-        this.mapData(t).buildUi().render();
-      }));
+    `, t.appendChild(this.contentDiv), this.getForecastUrl().then((s) => {
+        this.mapData(s).buildUi().render();
+      });
     }
     render() {
-      this.contentDiv.innerHTML = this.forecastMarkup;
+      this.doRender = !1, this.contentDiv.innerHTML = this.forecastMarkup;
     }
     mapData(t) {
-      const { periods: n } = t;
-      return this.forecastData = n.slice(0, 3).map((i) => {
-        const { name: o, temperature: c, temperatureUnit: h, windSpeed: l, shortForecast: d } = i;
-        return { name: o, temperature: c, temperatureUnit: h, windSpeed: l, shortForecast: d };
+      const { periods: s } = t;
+      return this.forecastData = s.slice(0, 3).map((r) => {
+        const { name: o, temperature: c, temperatureUnit: d, windSpeed: h, shortForecast: p } = r;
+        return { name: o, temperature: c, temperatureUnit: d, windSpeed: h, shortForecast: p };
       }), this;
     }
     buildUi() {
       return this.forecastMarkup = this.forecastData.map((t) => `<div class="periodCard"><div>${t.name}</div><div class="temperature">${t.temperature}</div></div>`).join(""), this;
     }
   }
-  e(s, "observedAttributes", ["lat", "lng"]), customElements.define("my-weather", s);
+  document && customElements.define("my-weather", a);
 })();
 export {
   f as default
