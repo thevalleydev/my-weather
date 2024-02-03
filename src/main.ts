@@ -1,7 +1,6 @@
 export default (() => {
   // Create a class for the element
 class MyWeather extends HTMLElement {
-  static observedAttributes = ["lat", "lng"]
   weatherApiUrl: string
   doRender: boolean
   forecastData: Array<any>
