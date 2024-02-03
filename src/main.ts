@@ -89,6 +89,9 @@ class MyWeather extends HTMLElement {
   }
 }
 if (document) {
-  customElements.define("my-weather", MyWeather);
+  window.onload = (() => {
+
+    customElements.define("my-weather", MyWeather);
+  })
 }
 })()
