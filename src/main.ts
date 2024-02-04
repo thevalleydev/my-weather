@@ -1,11 +1,10 @@
-import { getForecast } from "./utils/useWeatherApi"
+import { getForecast, mapForecastData } from "./utils/useWeatherApi"
 
 export default (() => {
   if (!document) return
   // Create a class for the element
 class MyWeather extends HTMLElement {
   doRender: boolean
-  forecastData: Array<any>
   forecastMarkup: string
   contentDiv: any
   
@@ -17,7 +16,6 @@ class MyWeather extends HTMLElement {
     this.contentDiv.classList.add('periodContainer')
     this.contentDiv.setAttribute('style', 'display:flex;')
     this.contentDiv.innerText = 'loading'
-    this.forecastData = []
     this.forecastMarkup = ''
   }
   
@@ -49,9 +47,9 @@ class MyWeather extends HTMLElement {
     `
     shadow.appendChild(this.contentDiv)
     
-    const weatherApiUrl = `https://api.weather.gov/points/${this.getAttribute('lat')},${this.getAttribute('lng')}`
-    getForecast(weatherApiUrl).then((forecast: { periods: any; }) => {
-      this.mapData(forecast).buildUi().render()
+    getForecast(this.getAttribute('lat'), this.getAttribute('lng')).then((forecast: { periods: any; }) => {
+      const forecastData = mapForecastData(forecast)
+      this.buildUi(forecastData).render()
     })
   }
   
@@ -60,18 +58,9 @@ class MyWeather extends HTMLElement {
     this.contentDiv.innerHTML = this.forecastMarkup
   }
   
-  mapData(forecast: { periods: any; }) {
-    const { periods } = forecast
-    
-    this.forecastData = periods.slice(0, 3).map((period: { name: any; temperature: any; temperatureUnit: any; windSpeed: any; shortForecast: any; }) => {
-      const { name, temperature, temperatureUnit, windSpeed, shortForecast } = period
-      return { name, temperature, temperatureUnit, windSpeed, shortForecast}
-    })
-    return this
-  }
   
-  buildUi() {
-    this.forecastMarkup = this.forecastData.map((periodData) => {
+  buildUi(forecastData: any[]) {
+    this.forecastMarkup = forecastData.map((periodData: { name: any; temperature: any }) => {
       return `<div class="periodCard"><div>${periodData.name}</div><div class="temperature">${periodData.temperature}</div></div>`
     }).join('')
     return this
