@@ -1,37 +1,24 @@
+import { getForecast } from "./utils/useWeatherApi"
+
 export default (() => {
   if (!document) return
   // Create a class for the element
 class MyWeather extends HTMLElement {
-  weatherApiUrl: string
   doRender: boolean
   forecastData: Array<any>
   forecastMarkup: string
   contentDiv: any
-  getForecast: any
-  getForecastUrl: any
   
   constructor() {
     // Always call super first in constructor
     super()
     this.doRender = true
-    this.weatherApiUrl = ''
     this.contentDiv = <HTMLElement>document.createElement('div')
     this.contentDiv.classList.add('periodContainer')
     this.contentDiv.setAttribute('style', 'display:flex;')
     this.contentDiv.innerText = 'loading'
     this.forecastData = []
     this.forecastMarkup = ''
-    
-    this.getForecast = async (url: RequestInfo | URL) => {
-        const response = await fetch(url)
-        const weather = await response.json()
-        return weather?.properties
-    }
-    this.getForecastUrl = async () => {
-      const response = await fetch(this.weatherApiUrl)
-      const weather = await response.json()
-      return this.getForecast(weather?.properties?.forecast)
-    }
   }
   
   connectedCallback() {
@@ -62,8 +49,8 @@ class MyWeather extends HTMLElement {
     `
     shadow.appendChild(this.contentDiv)
     
-    this.weatherApiUrl = `https://api.weather.gov/points/${this.getAttribute('lat')},${this.getAttribute('lng')}`
-    this.getForecastUrl().then((forecast: { periods: any; }) => {
+    const weatherApiUrl = `https://api.weather.gov/points/${this.getAttribute('lat')},${this.getAttribute('lng')}`
+    getForecast(weatherApiUrl).then((forecast: { periods: any; }) => {
       this.mapData(forecast).buildUi().render()
     })
   }
