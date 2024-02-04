@@ -1,12 +1,12 @@
 const weatherApiBaseUrl = 'https://api.weather.gov'
 
-const getForecastUrl = async (lat: string, lng: string) => {
+const getForecastUrl = async (lat: string | null, lng: string | null) => {
   const response = await fetch(`${weatherApiBaseUrl}/points/${lat},${lng}`)
   const { properties} = await response.json()
   return properties?.forecast
 }
 
-const getForecast = async (lat: string, lng: string) => {
+const getForecast = async (lat: string | null, lng: string | null) => {
   const forecastUrl = await getForecastUrl(lat, lng)
   const response = await fetch(forecastUrl)
   const { properties } = await response.json()

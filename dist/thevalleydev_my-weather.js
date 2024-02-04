@@ -1,31 +1,32 @@
-var l = Object.defineProperty;
-var u = (a, e, n) => e in a ? l(a, e, { enumerable: !0, configurable: !0, writable: !0, value: n }) : a[e] = n;
-var i = (a, e, n) => (u(a, typeof e != "symbol" ? e + "" : e, n), n);
-const f = (() => {
+var d = Object.defineProperty;
+var h = (e, t, n) => t in e ? d(e, t, { enumerable: !0, configurable: !0, writable: !0, value: n }) : e[t] = n;
+var a = (e, t, n) => (h(e, typeof t != "symbol" ? t + "" : t, n), n);
+const l = "https://api.weather.gov", p = async (e, t) => {
+  const n = await fetch(`${l}/points/${e},${t}`), { properties: s } = await n.json();
+  return s == null ? void 0 : s.forecast;
+}, u = async (e, t) => {
+  const n = await p(e, t), s = await fetch(n), { properties: r } = await s.json();
+  return r;
+}, m = (e) => {
+  const { periods: t } = e;
+  return t.slice(0, 3).map((n) => {
+    const { name: s, temperature: r, temperatureUnit: i, windSpeed: o, shortForecast: c } = n;
+    return { name: s, temperature: r, temperatureUnit: i, windSpeed: o, shortForecast: c };
+  });
+}, v = (() => {
   if (!document)
     return;
-  class a extends HTMLElement {
+  class e extends HTMLElement {
     constructor() {
       super();
-      i(this, "weatherApiUrl");
-      i(this, "doRender");
-      i(this, "forecastData");
-      i(this, "forecastMarkup");
-      i(this, "contentDiv");
-      i(this, "getForecast");
-      i(this, "getForecastUrl");
-      this.doRender = !0, this.weatherApiUrl = "", this.contentDiv = document.createElement("div"), this.contentDiv.classList.add("periodContainer"), this.contentDiv.setAttribute("style", "display:flex;"), this.contentDiv.innerText = "loading", this.forecastData = [], this.forecastMarkup = "", this.getForecast = async (t) => {
-        const r = await (await fetch(t)).json();
-        return r == null ? void 0 : r.properties;
-      }, this.getForecastUrl = async () => {
-        var r;
-        const s = await (await fetch(this.weatherApiUrl)).json();
-        return this.getForecast((r = s == null ? void 0 : s.properties) == null ? void 0 : r.forecast);
-      };
+      a(this, "doRender");
+      a(this, "forecastMarkup");
+      a(this, "contentDiv");
+      this.doRender = !0, this.contentDiv = document.createElement("div"), this.contentDiv.classList.add("periodContainer"), this.contentDiv.setAttribute("style", "display:flex;"), this.contentDiv.innerText = "loading", this.forecastMarkup = "";
     }
     connectedCallback() {
-      const t = this.attachShadow({ mode: "open" });
-      t.innerHTML = `<style>
+      const s = this.attachShadow({ mode: "open" });
+      s.innerHTML = `<style>
       :host {
         font: 1.2rem sans-serif;
         max-width: 400px;
@@ -48,26 +49,20 @@ const f = (() => {
        }
       </style>
       <h1><slot name="title">My Weather</slot></h1>
-    `, t.appendChild(this.contentDiv), this.weatherApiUrl = `https://api.weather.gov/points/${this.getAttribute("lat")},${this.getAttribute("lng")}`, this.getForecastUrl().then((s) => {
-        this.mapData(s).buildUi().render();
+    `, s.appendChild(this.contentDiv), u(this.getAttribute("lat"), this.getAttribute("lng")).then((r) => {
+        const i = m(r);
+        this.buildUi(i).render();
       });
     }
     render() {
       this.doRender = !1, this.contentDiv.innerHTML = this.forecastMarkup;
     }
-    mapData(t) {
-      const { periods: s } = t;
-      return this.forecastData = s.slice(0, 3).map((r) => {
-        const { name: o, temperature: c, temperatureUnit: h, windSpeed: d, shortForecast: p } = r;
-        return { name: o, temperature: c, temperatureUnit: h, windSpeed: d, shortForecast: p };
-      }), this;
-    }
-    buildUi() {
-      return this.forecastMarkup = this.forecastData.map((t) => `<div class="periodCard"><div>${t.name}</div><div class="temperature">${t.temperature}</div></div>`).join(""), this;
+    buildUi(s) {
+      return this.forecastMarkup = s.map((r) => `<div class="periodCard"><div>${r.name}</div><div class="temperature">${r.temperature}</div></div>`).join(""), this;
     }
   }
-  customElements.define("my-weather", a);
+  customElements.define("my-weather", e);
 })();
 export {
-  f as default
+  v as default
 };
