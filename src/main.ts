@@ -1,4 +1,4 @@
-import { getForecast, mapForecastData } from "./utils/useWeatherApi"
+import { getForecast, mapForecastData } from "./utils/useWeatherApi.ts"
 
 export default (() => {
   if (!document) return
