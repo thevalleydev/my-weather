@@ -14,8 +14,6 @@ const l = "https://api.weather.gov", p = async (e, t) => {
     return { name: s, temperature: r, temperatureUnit: i, windSpeed: o, shortForecast: c };
   });
 }, v = (() => {
-  if (!document)
-    return;
   class e extends HTMLElement {
     constructor() {
       super();
@@ -27,29 +25,29 @@ const l = "https://api.weather.gov", p = async (e, t) => {
     connectedCallback() {
       const s = this.attachShadow({ mode: "open" });
       s.innerHTML = `<style>
-      :host {
-        font: 1.2rem sans-serif;
-        max-width: 400px;
-        display: block;
-       }
-       h1 {
-         font-weight: 500;
-       }
-       .periodContainer {
-         justify-content: space-between;
-       }
-       .periodCard {
-         display: flex;
-         flex-direction: column;
-       }
-       .temperature {
-          text-align: center;
-          font-size: 1.8rem;
-          padding: .5rem;
-       }
-      </style>
-      <h1><slot name="title">My Weather</slot></h1>
-    `, s.appendChild(this.contentDiv), u(this.getAttribute("lat"), this.getAttribute("lng")).then((r) => {
+        :host {
+          font: 1.2rem sans-serif;
+          max-width: 400px;
+          display: block;
+        }
+        h1 {
+          font-weight: 500;
+        }
+        .periodContainer {
+          justify-content: space-between;
+        }
+        .periodCard {
+          display: flex;
+          flex-direction: column;
+        }
+        .temperature {
+            text-align: center;
+            font-size: 1.8rem;
+            padding: .5rem;
+        }
+        </style>
+        <h1><slot name="title">My Weather</slot></h1>
+      `, s.appendChild(this.contentDiv), u(this.getAttribute("lat"), this.getAttribute("lng")).then((r) => {
         const i = m(r);
         this.buildUi(i).render();
       });
