@@ -11,7 +11,6 @@ export default (() => {
     constructor() {
       // Always call super first in constructor
       super()
-      this.doRender = true
       this.contentDiv = <HTMLElement>document.createElement('div')
       this.contentDiv.classList.add('periodContainer')
       this.contentDiv.setAttribute('style', 'display:flex;')
@@ -43,6 +42,7 @@ export default (() => {
             padding: .5rem;
         }
         </style>
+        <slot name="styles"></slot>
         <h1><slot name="title">My Weather</slot></h1>
       `
       shadow.appendChild(this.contentDiv)
@@ -54,7 +54,6 @@ export default (() => {
     }
     
     render() {
-      this.doRender = false
       this.contentDiv.innerHTML = this.forecastMarkup
     }
     
