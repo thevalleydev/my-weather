@@ -1,7 +1,7 @@
 import { getForecast, mapForecastData } from "./utils/useWeatherApi.ts"
 
 export default (() => {
-  if (!typeof document) return
+  if (typeof document !== 'object') return
   // Create a class for the element
   class MyWeather extends HTMLElement {
     doRender: boolean
