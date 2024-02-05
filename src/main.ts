@@ -4,7 +4,6 @@ export default (() => {
   if (typeof document !== 'object') return
   // Create a class for the element
   class MyWeather extends HTMLElement {
-    doRender: boolean
     forecastMarkup: string
     contentDiv: any
     
@@ -42,7 +41,6 @@ export default (() => {
             padding: .5rem;
         }
         </style>
-        <slot name="styles"></slot>
         <h1><slot name="title">My Weather</slot></h1>
       `
       shadow.appendChild(this.contentDiv)
