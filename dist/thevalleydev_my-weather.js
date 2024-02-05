@@ -14,6 +14,8 @@ const l = "https://api.weather.gov", p = async (e, t) => {
     return { name: s, temperature: r, temperatureUnit: i, windSpeed: o, shortForecast: c };
   });
 }, v = (() => {
+  if (typeof document != "object")
+    return;
   class e extends HTMLElement {
     constructor() {
       super();
